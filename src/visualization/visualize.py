@@ -42,3 +42,21 @@ for label in df["label"].unique():
 # ====================================================
 # Adjust plot settings
 # ====================================================
+
+# Can change RC params in order to customize plots without too much repetition
+# Uses mpl not plt
+mpl.style.use("seaborn-deep")
+mpl.rcParams["figure.figsize"] = (20, 5)
+
+# ====================================================
+# Compare Heavy vs Medium Sets
+# ====================================================
+# Stacking queries to get our df
+category_df = df.query("label == 'squat'").query("participant == 'A'").reset_index() # string match, need the quotes in this structure
+
+# Groupby to get a plot based on category
+fig, ax = plt.subplots()
+category_df.groupby(["category"])["acc_y"].plot()
+ax.set_ylabel("Vertical Acceleration") 
+ax.set_xlabel("Samples") 
+plt.legend()
