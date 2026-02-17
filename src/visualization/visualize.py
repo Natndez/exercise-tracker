@@ -81,7 +81,7 @@ all_axis_df = df.query(f"label == '{label}'").query(f"participant == '{participa
 
 fig, ax = plt.subplots()
 all_axis_df[["acc_x", "acc_y", "acc_z"]].plot(ax=ax)
-ax.set_ylabel("Vertical Acceleration") 
+ax.set_ylabel("Acceleration") 
 ax.set_xlabel("Samples")
 plt.legend()
 
@@ -91,6 +91,7 @@ plt.legend()
 labels = df["label"].unique()
 participants = df["participant"].unique()
 
+# Acceleromater data
 for label in labels:
     for participant in participants:
         all_axis_df = (
@@ -98,9 +99,26 @@ for label in labels:
             .query(f"participant == '{participant}'")
             .reset_index()
             )
-        fig, ax = plt.subplots()
-        all_axis_df[["acc_x", "acc_y", "acc_z"]].plot(ax=ax)
-        ax.set_ylabel("Vertical Acceleration") 
-        ax.set_xlabel("Samples")
-        plt.title(f"{label} ({participant})".title())
-        plt.legend()
+        if len(all_axis_df) > 0:
+            fig, ax = plt.subplots()
+            all_axis_df[["acc_x", "acc_y", "acc_z"]].plot(ax=ax)
+            ax.set_ylabel("Acceleration") 
+            ax.set_xlabel("Samples")
+            plt.title(f"{label} ({participant})".title())
+            plt.legend()
+            
+# Gyroscope data
+for label in labels:
+    for participant in participants:
+        all_axis_df = (
+            df.query(f"label == '{label}'")
+            .query(f"participant == '{participant}'")
+            .reset_index()
+            )
+        if len(all_axis_df) > 0:
+            fig, ax = plt.subplots()
+            all_axis_df[["gyr_x", "gyr_y", "gyr_z"]].plot(ax=ax)
+            ax.set_ylabel("Orientation") 
+            ax.set_xlabel("Samples")
+            plt.title(f"{label} ({participant})".title())
+            plt.legend()
