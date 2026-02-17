@@ -49,7 +49,7 @@ mpl.style.use("seaborn-deep")
 mpl.rcParams["figure.figsize"] = (20, 5)
 
 # ====================================================
-# Compare Heavy vs Medium Sets
+# Compare Heavy vs Medium Sets (Squats)
 # ====================================================
 # Stacking queries to get our df
 category_df = df.query("label == 'squat'").query("participant == 'A'").reset_index() # string match, need the quotes in this structure
@@ -60,3 +60,17 @@ category_df.groupby(["category"])["acc_y"].plot()
 ax.set_ylabel("Vertical Acceleration") 
 ax.set_xlabel("Samples") 
 plt.legend()
+
+# ====================================================
+# Compare Participants (Bench)
+# ====================================================
+participant_df = df.query("label == 'bench'").sort_values("participant").reset_index()
+fig, ax = plt.subplots()
+participant_df.groupby(["participant"])["acc_y"].plot()
+ax.set_ylabel("Vertical Acceleration") 
+ax.set_xlabel("Samples") 
+plt.legend()
+
+# ====================================================
+# Plot Multiple Axis
+# ====================================================
