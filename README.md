@@ -140,8 +140,9 @@ These observations support the feasibility of supervised classification.
 
 ## Next Steps
 
+- Outlier removal
 - Feature engineering (magnitude, rolling statistics, frequency-domain features)  
-- Repetition detection via peak analysis  
+- Repetition detection  
 - Supervised classification (exercise + intensity)  
 - Cross-participant validation  
 - Generalization analysis  
@@ -154,7 +155,8 @@ These observations support the feasibility of supervised classification.
 - Pandas  
 - NumPy  
 - Matplotlib  
-- SciPy  
+- SciPy
+- Scikit-learn  
 - Conda environment management  
 
 ---
