@@ -122,3 +122,27 @@ for label in labels:
             ax.set_xlabel("Samples")
             plt.title(f"{label} ({participant})".title())
             plt.legend()
+            
+# ====================================================
+# Combining Plots into one figure
+# ====================================================
+# Using Row for this visualization
+label = "row"
+participant = "A"
+combined_plot_df = (
+    df.query(f"label == '{label}'")
+    .query(f"participant == '{participant}'")
+    .reset_index(drop=True)
+)
+
+# Plotting data for each sensor
+fig, ax = plt.subplots(nrows=2, sharex=True, figsize=(20,10))
+combined_plot_df[["acc_x", "acc_y", "acc_z"]].plot(ax=ax[0])
+combined_plot_df[["gyr_x", "gyr_y", "gyr_z"]].plot(ax=ax[1])
+
+# Plot styling
+ax[0].legend(loc="upper center", bbox_to_anchor=(.5, 1.15), ncol=3, fancybox=True, shadow=True)
+ax[0].set_ylabel("Acceleration")
+ax[1].legend(loc="upper center", bbox_to_anchor=(.5, 1.15), ncol=3, fancybox=True, shadow=True)
+ax[1].set_xlabel("Samples")
+ax[1].set_ylabel("Orientation")
