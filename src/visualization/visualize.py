@@ -179,3 +179,8 @@ for label in labels:
             plt.savefig(f"../../reports/figures/{label.title()} ({participant}).png")
             
             plt.show()
+            
+            # Close figure to avoid memory issues in long loops like this
+            plt.close(fig)
+            
+            
