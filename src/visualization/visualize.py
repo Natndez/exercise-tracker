@@ -183,4 +183,3 @@ for label in labels:
             # Close figure to avoid memory issues in long loops like this
             plt.close(fig)
             
-            
