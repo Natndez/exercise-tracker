@@ -226,14 +226,55 @@ for col in outlier_cols:
 # Check outliers grouped by label with each method
 # ====================================================
 label = "bench"
+
+#IQR
 for col in outlier_cols:
     dataset = mark_outliers_iqr(df[df["label"] == label], col)
     plot_binary_outliers(dataset, col, col + "_outlier", reset_index=True)
 
+#Chauv
 for col in outlier_cols:
     dataset = mark_outliers_chauvenet(df[df["label"] == label], col)
     plot_binary_outliers(dataset, col, col + "_outlier", reset_index=True)
-    
+ 
+# LOF    
+dataset, outliers, X_scores = mark_outliers_lof(df[df["label"] == label], outlier_cols)
+for col in outlier_cols:
+    plot_binary_outliers(dataset=dataset, col=col, outlier_col="outlier_lof", reset_index=True)    
 # ====================================================
-# Choose ideal method and deal with outliers
+# Choose ideal method and deal with outliers (Chauvenet)
 # ====================================================    
+
+# Test on a single column
+col = "gyr_z"
+dataset = mark_outliers_chauvenet(df, col=col)
+
+len(dataset[dataset["gyr_z_outlier"]]) # 58 total outliers
+
+# Setting all outlier values to nan
+dataset.loc[dataset["gyr_z_outlier"], "gyr_z"] = np.nan
+
+# Create a loop to deal with ALL outliers
+outliers_removed_df = df.copy() 
+
+for col in outlier_cols:
+    for label in df["label"].unique():
+        dataset = mark_outliers_chauvenet(df[df["label"] == label], col=col)
+        
+        # Replace outlier values with NaN
+        dataset.loc[dataset[col + "_outlier"], col] = np.nan
+        
+        # Update the column in the og dataframe
+        outliers_removed_df.loc[(outliers_removed_df["label"] == label), col] = dataset[col]
+        
+        # Display how many outliers were removed
+        n_outliers = len(dataset) - len(dataset[col].dropna())
+        
+        print(f"Removed {n_outliers} outliers from {col} for {label}")
+
+df.info()
+outliers_removed_df.info()
+# ====================================================
+# Export new dataframe
+# ====================================================   
+outliers_removed_df.to_pickle("../../data/interim/02_outliers_removed_chauvenet.pkl")
