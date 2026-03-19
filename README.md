@@ -8,7 +8,7 @@ This project explores whether wearable inertial measurement unit (IMU) data can 
 - Distinguish movement intensity (e.g., heavy vs. medium sets)  
 - Detect repetition patterns  
 
-Using multi-axis accelerometer and gyroscope data collected from multiple participants, I built a structured preprocessing pipeline and exploratory analysis workflow to prepare the data for machine learning modeling.
+Using multi-axis accelerometer and gyroscope data collected from multiple participants, I built a structured preprocessing pipeline, outlier handling process, and exploratory analysis workflow to prepare the data for machine learning modeling.
 
 ---
 
@@ -124,6 +124,32 @@ This pipeline transforms raw sensor logs into a structured time-series dataset s
 
 ---
 
+## Outlier Detection
+
+Raw IMU data contains significant noise and occasional extreme spikes that can negatively impact downstream modeling.
+
+To address this, multiple outlier detection approaches were explored:
+
+- Interquartile Range (IQR)  
+- Chauvenet’s Criterion  
+- Local Outlier Factor (LOF)  
+
+Each method was evaluated through visualization of time-series data with detected outliers.
+
+Key observations:
+
+- IQR tended to flag a large number of points, including natural variation  
+- LOF captured multi-dimensional anomalies but was often overly sensitive  
+- Chauvenet’s Criterion provided a balanced approach, identifying extreme deviations while preserving meaningful signal patterns  
+
+Outlier removal was performed **per exercise label**, ensuring that movement-specific characteristics were preserved.
+
+Instead of dropping data points, detected outliers were replaced with `NaN` values to maintain time-series continuity.
+
+The cleaned dataset is exported for further feature engineering and modeling.
+
+---
+
 ## Exploratory Analysis
 
 Initial visualization shows meaningful signal differences even before modeling:
@@ -140,7 +166,6 @@ These observations support the feasibility of supervised classification.
 
 ## Next Steps
 
-- Outlier removal
 - Feature engineering (magnitude, rolling statistics, frequency-domain features)  
 - Repetition detection  
 - Supervised classification (exercise + intensity)  
@@ -155,7 +180,7 @@ These observations support the feasibility of supervised classification.
 - Pandas  
 - NumPy  
 - Matplotlib  
-- SciPy
+- SciPy  
 - Scikit-learn  
 - Conda environment management  
 
@@ -163,5 +188,7 @@ These observations support the feasibility of supervised classification.
 
 ## Status
 
-Data preprocessing and exploratory visualization complete.  
-Feature engineering and model training in progress.
+- Data preprocessing complete  
+- Outlier detection and cleaning complete  
+- Exploratory analysis complete  
+- Feature engineering in progress  
