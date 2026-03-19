@@ -194,3 +194,46 @@ for col in outlier_cols:
 # ====================================================
 # Local Outlier Function (Distance Based)
 # ====================================================
+def mark_outliers_lof(dataset, columns, n=20):
+    """Mark values as outliers using LOF
+
+    Args:
+        dataset (pd.DataFrame): The dataset
+        col (string): The column you want apply outlier detection to
+        n (int, optional): n_neighbors. Defaults to 20.
+    
+    Returns:
+        pd.DataFrame: The original dataframe with an extra boolean column
+        indicating whether the value is an outlier or not.
+    """
+    
+    dataset = dataset.copy()
+
+    lof = LocalOutlierFactor(n_neighbors=n)
+    data = dataset[columns]
+    outliers = lof.fit_predict(data)
+    X_scores = lof.negative_outlier_factor_
+
+    dataset["outlier_lof"] = outliers == -1
+    return dataset, outliers, X_scores
+
+
+dataset, outliers, X_scores = mark_outliers_lof(df, outlier_cols)
+for col in outlier_cols:
+    plot_binary_outliers(dataset=dataset, col=col, outlier_col="outlier_lof", reset_index=True)
+
+# ====================================================
+# Check outliers grouped by label with each method
+# ====================================================
+label = "bench"
+for col in outlier_cols:
+    dataset = mark_outliers_iqr(df[df["label"] == label], col)
+    plot_binary_outliers(dataset, col, col + "_outlier", reset_index=True)
+
+for col in outlier_cols:
+    dataset = mark_outliers_chauvenet(df[df["label"] == label], col)
+    plot_binary_outliers(dataset, col, col + "_outlier", reset_index=True)
+    
+# ====================================================
+# Choose ideal method and deal with outliers
+# ====================================================    
